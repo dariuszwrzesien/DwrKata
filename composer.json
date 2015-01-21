@@ -1,6 +1,6 @@
 {
-    "name": "kata/php",
-    "description": "PHP Kata",
+    "name": "dwr/kata",
+    "description": "PHP coding katas.",
     "keywords": ["kata","TDD", "php"],
     "type": "library",
     "require-dev": {
