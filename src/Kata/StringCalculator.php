@@ -11,7 +11,7 @@ class StringCalculator
     public function add($string)
     {
         if('' === $string){
-            return 0;
+            return '0';
         }
         
         $result = 0;
