@@ -45,13 +45,17 @@ class StringCalculator
      */
     private function isDelimiter($string)
     {
-        if(mb_substr($string, 0, 2) === '//'){
+        if (mb_substr($string, 0, 2) === '//'){
             return true;
         }
         
         return false;
     }
     
+    /**
+     * @param string $string
+     * @return string
+     */
     private function getDelimiter($string)
     {
         return substr(substr($string, 2), 0, strpos(substr($string, 2), "\n"));
