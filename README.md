@@ -64,4 +64,4 @@ String Calculator
     
     9. Make sure you can also handle multiple delimiters with length longer than one char
 
-Resolved on branch stringCalculator.
+Resolved on branch [stringCalculator] (https://github.com/dariuszwrzesien/DwrKata/tree/stringCalculator) .
