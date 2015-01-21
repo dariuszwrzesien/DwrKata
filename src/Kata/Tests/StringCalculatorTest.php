@@ -16,6 +16,9 @@ class StringCalculatorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $stringCalculator->add($values));
     }
     
+    /**
+     * @return array
+     */
     public function valuesProvider(){
         return array(
             array('', 0),
