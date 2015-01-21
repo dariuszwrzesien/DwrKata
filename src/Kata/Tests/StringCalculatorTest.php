@@ -1,10 +1,11 @@
 <?php
+
 namespace Kata;
 
 class StringCalculatorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var StringCalculator 
+     * @var StringCalculator
      */
     private $stringCalculator;
     
@@ -13,30 +14,23 @@ class StringCalculatorTest extends \PHPUnit_Framework_TestCase
         $this->stringCalculator = new StringCalculator();
     }
     
-    public function testAdderWithoutValue()
+    /**
+     * @test
+     */
+    public function addingEmptyString()
     {
-        $this->assertSame(0, $this->stringCalculator->add());
+        $this->assertSame(0, $this->stringCalculator->add(''));
     }
     
     /**
+     * @test
      * @dataProvider oneValueProvider
-     * @param int $a
-     * @param int $expected
+     * @param string $string
+     * @param string $expected
      */
-    public function testAdderWithObeValue($a, $expected)
+    public function addingOneValue($string, $expected)
     {
-        $this->assertSame($expected, $this->stringCalculator->add($a));
-    }
-    
-    /**
-     * @dataProvider twoValueProvider
-     * @param type $a
-     * @param type $b
-     * @param type $expected
-     */
-    public function testAdderWithTwoValues($a, $b, $expected)
-    {
-        $this->assertSame($expected, $this->stringCalculator->add($a, $b));
+        $this->assertSame($expected, $this->stringCalculator->add($string));
     }
     
     /**
@@ -45,10 +39,21 @@ class StringCalculatorTest extends \PHPUnit_Framework_TestCase
     public function oneValueProvider()
     {
         return array(
-          array(0,0),  
-          array(1,1),  
-          array(9,9)
+            array('0', '0'),
+            array('1', '1'),
+            array('2', '2')
         );
+    }
+    
+    /**
+     * @test
+     * @dataProvider twoValueProvider
+     * @param string $values
+     * @param string $expected
+     */
+    public function addingTwoValues($values, $expected)
+    {
+        $this->assertSame($expected, $this->stringCalculator->add($values));
     }
     
     /**
@@ -57,12 +62,74 @@ class StringCalculatorTest extends \PHPUnit_Framework_TestCase
     public function twoValueProvider()
     {
         return array(
-          array(0,0,0),  
-          array(1,1,2),  
-          array(0,1,1),
-          array(1,2,3),
-          array(1,0,1),
-          array(2,1,3)
+            array('0, 1', '1'),
+            array('1, 1', '2'),
+            array('2, 0', '2')
+        );
+    }
+    
+    /**
+     * @test
+     * @dataProvider multipleValuesProvider
+     * @param string $values
+     * @param string $expected
+     */
+    public function addingMultipleValues($values, $expected)
+    {
+        $this->assertSame($expected, $this->stringCalculator->add($values));
+    }
+    
+    public function multipleValuesProvider()
+    {
+        return array(
+            array('1,2,3', '6'),
+            array('0,1,2,4', '7'),
+            array('0,2,0,1,0', '3'),
+        );
+    }
+    
+    /**
+     * @test
+     * @dataProvider multipleValuesWithNewLineProvider
+     * @param string $values
+     * @param string $expected
+     */
+    public function addingMultipleValuesWithNewLineDelimiter($values, $expected)
+    {
+        $this->assertSame($expected, $this->stringCalculator->add($values));
+    }
+    
+    /**
+     * @return array
+     */
+    public function multipleValuesWithNewLineProvider()
+    {
+        return array(
+            array("1\n2,3", '6'),
+            array("1,2\n3", '6'),
+            array("0\n1\n1", '2')
+        );
+    }
+    
+    /**
+     * @test
+     * @dataProvider multipleValuesWithDifferentDelimetersProvider
+     * @param string $values
+     * @param string $expected
+     */
+    public function addingMultipleValuesWithDifferentDelimetersDelimiter($values, $expected)
+    {
+        $this->assertSame($expected, $this->stringCalculator->add($values));
+    }
+    
+    /**
+     * @return array
+     */
+    public function multipleValuesWithDifferentDelimetersProvider()
+    {
+        return array(
+            array("//;\n1;2;3", '6'),
+            array("//dupa\n1dupa2dupa3", '6'),
         );
     }
 }
