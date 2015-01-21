@@ -5,47 +5,40 @@ namespace Kata;
 class StringCalculatorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var StringCalculator
+     * @test
+     * @dataProvider valuesProvider
+     * @param string $values
+     * @param int $expected
      */
-    private $stringCalculator;
+    public function addEmptyStringValue($values, $expected)
+    {
+        $stringCalculator = new StringCalculator();
+        $this->assertSame($expected, $stringCalculator->add($values));
+    }
     
-    public function setUp() {
-        parent::setUp();
-        $this->stringCalculator = new StringCalculator();
+    public function valuesProvider(){
+        return array(
+            array('', 0),
+            array('0', 0),
+            array('1', 1),
+            array('1,1', 2),
+            array('1,2,3', 6),
+            array('1,0,0,1', 2),
+            array("1\n2,3", 6),
+            array("1\n2\n3,0,1\n0,1", 8),
+            array("1,\n", 1),
+            array("//;\n1;2;1", 4),
+        );
     }
     
     /**
      * @test
-     * @dataProvider valuesProvider
-     * @param string $string
-     * @param string $expected
+     * @expectedException Exception
+     * @expectedExceptionMessage negatives not allowed -1,-2,-1
      */
-    public function addStrings($string, $expected)
+    public function negativesThrowException()
     {
-        $this->assertSame($expected, $this->stringCalculator->add($string));
-    }
-    
-    /**
-     * @return array
-     */
-    public function valuesProvider()
-    {
-        return array(
-            array('', '0'),
-            array('0', '0'),
-            array('1', '1'),
-            array('2', '2'),
-            array('0,1', '1'),
-            array('1,1', '2'),
-            array('2,0', '2'),
-            array('1,2,3', '6'),
-            array('0,1,2,4', '7'),
-            array('0,2,0,1,0', '3'),
-            array("1\n2,3", '6'),
-            array("1,2\n3", '6'),
-            array("0\n1\n1", '2'),
-            array("//;\n1;2;3", '6'),
-            array("//dupa\n1dupa2dupa3", '6'),
-        );
+        $stringCalculator = new StringCalculator();
+        $stringCalculator->add("-1,0\n-2,1,-1");
     }
 }
