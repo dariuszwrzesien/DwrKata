@@ -24,7 +24,6 @@ class StringCalculator
         }
         
         return (int)$result;
-        
     }
     
     /**
@@ -38,8 +37,7 @@ class StringCalculator
         if ($this->isDifferentDelimiter($string)) {
             $delimiters[] = $this->getDelimiter($string);
         }
-        
-        $values = preg_split(sprintf("/(%s)/", $delimiters), $string);
+        $values = preg_split(sprintf("/(%s)/", implode('|', $delimiters)), $string);
         
         return $this->validate($values);
     }
