@@ -5,43 +5,53 @@ namespace Kata;
 class StringCalculatorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @test
-     * @dataProvider valuesProvider
-     * @param string $values
-     * @param int $expected
+     * @var StringCalculator 
      */
-    public function addEmptyStringValue($values, $expected)
-    {
-        $stringCalculator = new StringCalculator();
-        $this->assertSame($expected, $stringCalculator->add($values));
+    private $stringCalculator;
+    
+    public function setUp() {
+        parent::setUp();
+        $this->stringCalculator = new StringCalculator();
     }
     
     /**
-     * @return array
+     * @test
+     * @dataProvider valuesProvider
+     * 
+     * @param string $values
+     * @param array $expected
      */
-    public function valuesProvider(){
-        return array(
-            array('', 0),
-            array('0', 0),
-            array('1', 1),
-            array('1,1', 2),
-            array('1,2,3', 6),
-            array('1,0,0,1', 2),
-            array("1\n2,3", 6),
-            array("1\n2\n3,0,1\n0,1", 8),
-            array("1,\n", 1),
-            array("//;\n1;2;1", 4),
-        );
+    public function addValues($values, $expected)
+    {
+        $this->assertSame($expected, $this->stringCalculator->add($values));
     }
     
     /**
      * @test
      * @expectedException Exception
-     * @expectedExceptionMessage negatives not allowed -1,-2,-1
+     * @expectedExceptionMessage negatives not allowed: -1,-2
      */
-    public function negativesThrowException()
+    public function addNegatives()
     {
-        $stringCalculator = new StringCalculator();
-        $stringCalculator->add("-1,0\n-2,1,-1");
+        $this->stringCalculator->add('1,2,3,-1,4,-2');
     }
+    
+    /**
+     * @return array
+     */
+    public function valuesProvider()
+    {
+        return array(
+            array('',0),
+            array('0',0),
+            array('1',1),
+            array('0,0',0),
+            array('1,1',2),
+            array('0,1,2,3',6),
+            array('1,1,0,1,0',3),
+            array("1\n2,3",6),
+            array("//;\n1;2",3),
+        );
+    }
+    
 }

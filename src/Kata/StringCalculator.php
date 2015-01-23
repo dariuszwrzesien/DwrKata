@@ -11,19 +11,11 @@ class StringCalculator
      * @return int
      */
     public function add($string)
-    {
-        if ('' === $string) {
-           return 0; 
-        }
-        
-        $result = 0;
+    {   
         $values = $this->getValues($string);
+        $this->validate($values);
         
-        foreach ($values as $val) {          
-            $result += $val;
-        }
-        
-        return (int)$result;
+        return array_sum($values);
     }
     
     /**
@@ -32,21 +24,30 @@ class StringCalculator
      */
     private function getValues($string)
     {
-        $delimiters = array(',', '\n');
+        $delimiters = $this->getDelimiter($string);
         
-        if ($this->isDifferentDelimiter($string)) {
-            $delimiters[] = $this->getDelimiter($string);
+        return preg_split(sprintf('/(%s)/', implode('|', $delimiters)), $string);
+    }
+    
+    /**
+     * @param string $string
+     * @return array
+     */
+    private function getDelimiter($string)
+    {
+        $delimiters = array(',','\n');
+        if ($this->isDifferentDelimiters($string)) {
+            $delimiters[] = $this->getDifferentDelimiter($string);
         }
-        $values = preg_split(sprintf("/(%s)/", implode('|', $delimiters)), $string);
         
-        return $this->validate($values);
+        return $delimiters;
     }
     
     /**
      * @param string $string
      * @return boolean
      */
-    private function isDifferentDelimiter($string)
+    private function isDifferentDelimiters($string)
     {
         return ('//' === mb_substr($string, 0, 2));
     }
@@ -55,7 +56,7 @@ class StringCalculator
      * @param string $string
      * @return string
      */
-    private function getDelimiter($string)
+    private function getDifferentDelimiter($string)
     {
         return mb_substr($string, 2, mb_strpos(mb_substr($string, 2), "\n"));
     }
@@ -68,17 +69,16 @@ class StringCalculator
     private function validate($values)
     {
         $errValues = array();
-        
         foreach ($values as $val) {
-            if($val < 0){
+            if ($val < 0) {
                 $errValues[] = $val;
             }
         }
         
         if ( ! empty($errValues)) {
-            throw new Exception(sprintf("negatives not allowed %s", implode(',', $errValues)));
+            throw new Exception(sprintf('negatives not allowed: %s', implode(',', $errValues)));
         }
-        
+                
         return $values;
     }
 }
