@@ -13,9 +13,10 @@ class StringCalculator
     public function add($string)
     {   
         $values = $this->getValues($string);
-        $this->validate($values);
+        $filteredValues = array_filter($values, array($this, 'filter'));
+        $this->validate($filteredValues);
         
-        return array_sum($values);
+        return array_sum($filteredValues);
     }
     
     /**
@@ -63,7 +64,6 @@ class StringCalculator
     
     /**
      * @param array $values
-     * @return array
      * @throws Exception
      */
     private function validate($values)
@@ -78,7 +78,14 @@ class StringCalculator
         if ( ! empty($errValues)) {
             throw new Exception(sprintf('negatives not allowed: %s', implode(',', $errValues)));
         }
-                
-        return $values;
+    }
+    
+    /**
+     * @param int $value
+     * @return boolean
+     */
+    private function filter($value)
+    {
+        return ($value < 1000);
     }
 }
