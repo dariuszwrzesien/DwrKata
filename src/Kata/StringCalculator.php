@@ -38,7 +38,7 @@ class StringCalculator
     {
         $delimiters = array(',','\n');
         if ($this->isDifferentDelimiters($string)) {
-            $delimiters[] = $this->getDifferentDelimiter($string);
+            $delimiters = $this->getDifferentDelimiter($string, $delimiters);
         }
         
         return $delimiters;
@@ -57,9 +57,20 @@ class StringCalculator
      * @param string $string
      * @return string
      */
-    private function getDifferentDelimiter($string)
+    private function getDifferentDelimiter($string, $delimiters)
     {
-        return mb_substr($string, 2, mb_strpos(mb_substr($string, 2), "\n"));
+        $differentDelimiters = mb_substr(
+            $string, 2, mb_strpos(mb_substr($string, 2), "\n")
+        );
+        
+        if ("[" === mb_substr($differentDelimiters, 0 , 1)) {
+            preg_match_all('/\[.\]/', $differentDelimiters, $listOfDelimeters);
+            return array_merge($delimiters, $listOfDelimeters[0]);
+        }
+        
+        $differentDelimiters = array($differentDelimiters);
+        
+        return array_merge($delimiters, $differentDelimiters);
     }
     
     /**
