@@ -59,16 +59,16 @@ class StringCalculator
      */
     private function getDifferentDelimiter($string, $delimiters)
     {
-        $differentDelimiters = mb_substr(
+        $differentDelimitersString = mb_substr(
             $string, 2, mb_strpos(mb_substr($string, 2), "\n")
         );
         
-        if ("[" === mb_substr($differentDelimiters, 0 , 1)) {
-            preg_match_all('/\[.\]/', $differentDelimiters, $listOfDelimeters);
+        if ("[" === mb_substr($differentDelimitersString, 0 , 1)) {
+            preg_match_all('/\[[^\]]*\]/', $differentDelimitersString, $listOfDelimeters);
             return array_merge($delimiters, $listOfDelimeters[0]);
         }
         
-        $differentDelimiters = array($differentDelimiters);
+        $differentDelimiters = array($differentDelimitersString);
         
         return array_merge($delimiters, $differentDelimiters);
     }
